@@ -1,0 +1,91 @@
+www.planttext.com
+
+@startuml
+
+title Relationships - Class Diagram
+
+
+
+
+
+class Composer {
+    +Name
+}
+
+
+class Performer {
+    +Name
+    +Performer Type
+}
+
+enum PerformerType {
+    +Soloist
+    +Conductor
+    +Group
+}
+
+
+class Piece {
+    +Composer
+    +Name
+}
+
+
+class Performance {
+    +Piece
+    +Performers
+    +Playtime
+    +Release Date
+    +URL
+}
+
+
+class ContentGroup {
+    +Pieces
+    +Name
+}
+
+
+class Album {
+    +Performances
+    +Name
+    +Release Date
+}
+
+
+class Playlist {
+    +Performances
+    +Title
+}
+
+
+class User {
+    +Email
+    +Password
+    +Playlists
+}
+
+class SearchResult {
+    +Query
+    +Albums
+    +Composers
+    +Performances
+    +Pieces
+}
+
+
+SearchResult "0..*" *-- "0..*" Album
+SearchResult "0..*" *-- "0..*" Composer
+SearchResult "0..*" *-- "0..*" Performance
+SearchResult "0..*" *-- "0..*" Piece
+
+User "1" o-- "0..*" Playlist
+Playlist "*" *-- "*" Performance
+ContentGroup "0..1" *-- "1..*" Piece
+Piece "1..*" o-- "1..*" Composer
+Performance "1..*" *-- "1" Piece
+Performance "1..*" *-- "1..*" Performer
+Performer 1..*" *-- "1" PerformerType
+Performance "1..*" --* "0..1" Album
+
+@enduml"
