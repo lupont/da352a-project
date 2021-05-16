@@ -3,10 +3,91 @@
 \subsection{The Non-Relational Concept}
 \label{intro-nosql-concept}
 % Pontus
+The term \emph{non-relational} in the database context refers to a type of
+database that does not store its data in the traditionally common tabular
+format. This means that it does not store the data in a relational way, which
+is implied by the name. The problem with storing data relationally, and thus
+the problem NoSQL wants to solve, is that scaling a database is non-trivial.
+
+\subsubsection{Scaling}
+\label{intro-scaling}
+There are two main ways of scaling a database: \emph{Scale-Up} and
+\emph{Scale-Out}. Scale-Up means giving the server more resources, in the form
+of memory, storage capacity, processors, etc. This is also referred to as
+scaling the database \emph{vertically}. Scale-Out on the other hand, means
+adding more identical services -- oftentimes this means more servers -- to the
+architecture. This is also referred to as scaling the database
+\emph{horizontally}.
+
+Vertical scaling is almost always an option. However, the price-to-performance
+increase is often not that high---meaning you have to spend a lot of money for
+minor performance increases. This is also the only way to easily scale
+relational databases, because they were designed without scale-out in mind.
+
+This is what non-relational databases do differently. The entire idea of them
+is to be able to handle big data, which is difficult -- if not impossible --
+without being able to scale horizontally in an efficient manner. This is because
+of the fact that they do not store the data relationally.
+
+\subsubsection{History}
+\label{intro-history}
+NoSQL has been around since its introduction by Carlo Strozzi in 1998. It did
+not immediately become a hit, but people recognized its pros compared to
+the traditional, relational databases, and a lot of effort has since been put
+into improving and standardizing NoSQL databases. Many big companies not only
+use NoSQL, but have also contributed directly by introducing new types of NoSQL
+databases---in 2004, Google launched their BigTable database. In 2007, Amazon
+released their paper on Dynamo, in 2008, Facebook open-sourced their Cassandra
+NoSQL database, and so on. During this time, the term ``NoSQL'' was not used
+very diligently. It was not until 2009 when the term was re-introduced that it
+really took off, and nowadays it is used everywhere---especially in web-related
+projects, since that is what its current aim is. One of the formal requirements
+of a database in order to be allowed to be called NoSQL is that it is
+open-source.
+
+The terms NoSQL and Non-Relational are equivalent, both meaning a database that
+does not store data relationally. In recent years, however, NoSQL has undergone
+a change. At first, it simply meant that the database did not use SQL as its
+query language. But, as more and more NoSQL databases showed up, people realized
+that since SQL is so good, there should be no need to have to memorize another
+syntax for doing the same things. Because of this, many NoSQL databases today
+provide query languages influenced by SQL, with the goal of feeling like the
+same language. Thus, NoSQL today means ``Not Only SQL'' more than \emph{no} SQL.
+
+There exists many different types of non-relational databases, and in the
+following sections we will explore four of the most common types; namely
+\textbf{key-value} (\ref{intro-kv-db}), \textbf{document} \ref{intro-doc-db},
+\textbf{graph} \ref{intro-graph-db}, and \textbf{column-family stores}
+\ref{intro-col-db}.
 
 \subsection{Key-Value Databases}
 \label{intro-kv-db}
 % Pontus
+Key-value databases are the simplest type of NoSQL-database. Its basic storage
+structure is a dictionary. This dictionary contains values connected by, as the
+name suggests, keys. To get a value, you must go via its key -- there is no
+other way. The value can be an integer, a string, an array, or a JSON object.
+This makes it very flexible, while being extremely simple to use. 
+
+The three operations a key-value database provides include \texttt{get(key)},
+\texttt{put(key, value)}, and \texttt{delete(key)}. With these operations, you
+have full control over the database. All handling of more complex logic must
+reside in the client code, which can be seen as a positive or a negative thing.
+On one hand, it keeps the database very simple to use and learn, but on the
+other hand, it might stress the client if you have to execute lots of code when
+querying the database. Though if that is the case, a key-value database might
+not be the best choice in the first hand -- see the following sections for
+alternatives.
+
+Amazon DynamoDB and Riak are two examples of popular Key-Value Databases. These
+are different implementations, which means that some things differ greatly
+between them. For example, Amazon DynamoDB is cloud-only -- meaning instances
+can't be hosted locally -- while Riak can be hosted anywhere. Also, DynamoDB is
+not open-source, which effectively goes against the criteria that NoSQL
+databases should be open-source. The technology and terms are still quite young,
+which could explain why this is the case---a unanimous decision of a formal
+specification has not been reached yet.
+
 
 \subsection{Document Databases}
 \label{intro-doc-db}
