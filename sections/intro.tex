@@ -29,6 +29,14 @@ is to be able to handle big data, which is difficult -- if not impossible --
 without being able to scale horizontally in an efficient manner. This is because
 of the fact that they do not store the data relationally.
 
+The term \emph{sharding} is used diligently in discussions about scaling NoSQL
+databases. Sharding is the process of partitioning a database into smaller, more
+manageable units -- potentially on different servers and in different parts of
+the world. The sharding process can be either automatic or manual; oftentimes
+the database can be set up to automatically split shards once they reach a
+certain threshold---this is called \emph{auto-sharding}---to relieve the
+programmer of having to handle data retrieval from different servers.
+
 \subsubsection{History}
 \label{intro-history}
 NoSQL has been around since its introduction by Carlo Strozzi in 1998. It did
@@ -92,6 +100,74 @@ specification has not been reached yet.
 \subsection{Document Databases}
 \label{intro-doc-db}
 % Pontus
+The idea behind Document Databases stems from the realization that oftentimes,
+data extracted from a relational database will not be used in a relational
+manner. For example, once the data has been stored to a relational database,
+an application wants to read the data and present it in an Excel spreadsheet.
+This format is not inherently relational, thus an interpretation has to be made
+in order to be able to export the relational data into the spreadsheet. The same
+goes for most other use cases. Document Databases typically store their data in
+XML- or JSON-documents, both of which have become standards in the serialization
+world. This allows for mitigating the issues that may arise when dealing with
+object-relational mismatches, and also realizing ad-hoc queries, all while
+being in a web-friendly format.
+
+\subsubsection{XML}
+\label{intro-doc-xml}
+
+The ecosystem of an XML-based Document Database includes the following:
+
+\noindent \textbf{XML} Data representation. This is the equivalence of tables in
+    relational databases.
+
+\noindent \textbf{XSD (XML Schema Definition)} A formal language for describing a
+    Document Database.
+
+\noindent \textbf{DTD (Document Type Definition)} An alternative to XSD, with pros and
+    cons.
+
+\noindent \textbf{DOM} A parser for programmatically accessing the document. Typically
+    used for smaller documents that can fit in memory.
+
+\noindent \textbf{SAX} Another type of parser for accessing the document. This is
+    typically used when the documents get quite large and do not fit in
+    memory.
+
+\noindent \textbf{XPath} A tool for querying an XML-document by its tags. Alternatives
+    include XSLT, XQuery.
+
+\noindent \textbf{Web Services} The programs in which the document databases are
+    utilized. Of course, all types of programs could be used, but web
+    services fit exceptionally well with XML and SOAP.
+
+Two examples of XML-based Document Databases are \emph{eXist} and
+\emph{MarkLogic}. ANSI SQL has also added definition support for XML.
+
+An XML-based database can be quite useful and easy to work with in certain
+workflows, but it of course has some drawbacks:
+\begin{itemize}
+    \item Processing an XML-document is expensive, and the documents themselves
+        take up a lot of memory.
+    \item The tags in the XML specification get quite repetitive, while in this
+        case not really advocating any prose. This is a big reason why XML-
+        documents can get so large.
+    \item CMS-oriented, meaning among other things that it is quite heavy
+        and importable.
+\end{itemize}
+
+\subsubsection{JSON}
+\label{intro-doc-json}
+Like with Web Services, that traditionally consisted of a lot of XML/SOAP,
+in recent years \emph{JSON} has overtaken XML in its usability. Unlike XML,
+the specification is quite minimal and allows for dynamic content storing and
+-modifying. JSON is not a markup language like XML is, but is created with the
+sole purpose of representing objects. JSON is also used to describe unstructured
+data, and includes arrays.
+
+The current king of document databases is \emph{MongoDB}, used diligently by
+modern---most of the time web-based---applications. It stores its data in JSON,
+and utilizes features like a powerful query language, auto-sharding for scaling,
+in-memory operation when available, and much more.
 
 \subsection{Graph Databases}
 \label{intro-graph-db}
