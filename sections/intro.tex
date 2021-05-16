@@ -140,27 +140,31 @@ Some commonly used column-oriented databases are \emph{Vertica}, \emph{InfoBrigh
 \subsubsection{Column-Oriented Databases}
 
 % Components
-Column-Oriented Databases are organized by column on disk, instead of rows as other databases.
+Column-Oriented Databases are organized by column on disk, instead of by row as many other database systems.
 % Comparison
 The idea of basing a database around columns have also been implemented in some relational databases today.
 
-% Data warehouse
-A data warehouse often use a \emph{star schema} which has a large \emph{central table} with facts that are connected to many smaller \emph{dimension tables}. This allows aggregate queries to execute quickly. A star schema is not fully normalized according to the relational model, but contains redundant data to improve performance.
-Columnar databases can be implemented using a delta store with write optimization to support the need for real-time updates in data warehouses. A delta store is separate from the database and either stores or projects the data in a row-oriented format. This means it can perform high-frequency data modifications which are periodically merged with the main columnar-oriented store. The downside of this strategy is that the correct data could be located in either of the stores, and a query might need access to both stores to return an accurate response.
-
 % Projections
-In some systems, certain columns are often accessed together. When that is the case, the system might benefit from storing the columns together on disk through a \emph{projection}. A table can then be represented as a series of projections. A projection of all columns in a table is called a \emph{superprojection}. Projections can also be made to increase the performance of certain queries. They can be created by the database administrator, or as needed by the query optimizer.
+In some systems, certain columns are often accessed together. When that is the case, the system might benefit from storing the columns together on disk through a \emph{projection}. A table can then be represented as a series of projections. A projection of all columns in a table is called a \emph{superprojection}. Projections can also be made to increase the performance of certain queries. They can be created by the database administrator, or automatically as needed by the query optimizer.
+
+% Common use case Data warehouse (remove this paragraph?)
+A common use case for column-oriented databases are for data warehouses.
+A data warehouse often use a \emph{star schema} which has a large \emph{central table} with facts that are connected to many smaller \emph{dimension tables}. This allows aggregate queries to execute quickly. A star schema is not fully normalized according to the relational model, but contains redundant data to improve performance.
+Columnar databases can be implemented using a delta store with write optimization to support the need for real-time updates in data warehouses. A delta store is separate from the database and either stores or projects the data in a row-oriented format. This means it can perform high-frequency data modifications which are periodically merged with the main columnar-oriented store. The downside of this strategy is that the correct data could be located in either one of the stores, and a query might need access to both stores to return an accurate response.
 
 \subsubsection{Column-Family Stores}
 
 % Components
-In a Column-Family Store, the data is stored in column families. Each row in a column family has a key and multiple columns associated with it. Each row in a column family can have a unique set of columns not necessarily the same as any other rows. Although the rows in a column family should be related and will often be accessed together. A column can also consist of a map of columns, which is referred to as a \emph{super column}. When super columns are used to create a column family, this is called a \emph{super column family}. A super column is useful to keep related data together on disk, but if only a part of the data is needed in a query, some computation is wasted in fetching and deserialize data. All column families and super column families are stored in a \emph{keyspace} at the highest level, which represents a database in a relational system.
+In a Column-Family Store, the data is -- as the name suggests -- stored in column families. Each row in a column family has a key and multiple columns associated with it. A row can have a unique set of columns not necessarily the same as any other row. All the rows in a column family should however be related and be accessed together. A column can also consist of a map of additional columns, which is referred to as a \emph{super column}. When super columns are used to create a column family, this is called a \emph{super column family}. A super column is useful to keep related data together on disk, but if only a part of the data is needed in a query, some computation is wasted on fetching and deserializing unnecessary data. All column families and super column families are stored in a \emph{keyspace} at the highest level, which represents a database in a relational system.
 
 % Implementation
-The most common implementation of a Column-Family Store is \emph{Cassandra}. A database instance -- or \emph{cluster} -- in Cassandra consists of equal nodes than can easily be added to or removed from the cluster. This makes it very scalable and fast, since each node can handle both reads and writes.
+The most common implementation of a Column-Family Store is \emph{Cassandra}. A database instance -- or \emph{cluster} -- in Cassandra consists of equal nodes than can easily be added to or removed from the cluster. This makes a Cassandra system very scalable and fast, since each node can handle both reads and writes.
 
-% Scalable
-A Cassandra system is configurable to achieve the required tradeoff between availability, consistency, and read/write performance. When a keyspace is created, it can be configured how many replicas of each data should be made, i.e. how many nodes will store a redundant copy of every piece of data. This is used to affect the availability of the system, being able to perform operations even if a node is down. A read or write can be considered successful if it has been written to on node, to a majority of the nodes, or to all of the nodes. Reading from or writing to more nodes gives worse performance, but increases the consistency. The consistency can be set with each query, depending on the need for the specific operation.
+% Scalable - replication
+A Cassandra system is configurable to achieve a specific tradeoff between availability, consistency, and read/write performance. When a keyspace is created, it can be configured to create a certain number of replicas of each data item. For example, with a replication rate of 3, each data item will be stored as redundant copies on 3 nodes. This affects the availability of the system, making it possible to perform operations even if a node is down.
+
+% Scalable - read/write
+A read or write operation can be configured to be considered successful if it has been performed on a certain number of nodes. Reading from or writing to more nodes results in worse performance, but increases the consistency. The read/write consistency can be set with each query, depending on the need for the specific operation. For example, a read consistency level of 2 means that the requested data will be read from at least 2 nodes before the operation is considered successful.
 
 % Query
-Column family stores are often optimized for reading and does not support query languages with a rich feature set. When retrieving or updating data, better performance is acquired by only querying the needed columns. Cassandra has support for its own query language \emph{Cassandra Query Language}, which is similar to SQL but lacks some features such as joins or subqueries.
+Column family stores are often optimized for reading data and does not support a query languages with a rich feature set. When retrieving or updating data, better performance is acquired by only querying the needed columns. Cassandra has support for its own query language \emph{Cassandra Query Language} (CQL), which is similar to SQL but lacks some features such as joins or subqueries.
