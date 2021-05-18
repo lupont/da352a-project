@@ -1,0 +1,232 @@
+Following is the user manual for Bithoven.
+The manual will cover all of the features in the command line interface.
+There are five primary functions in Bithoven, the functions are:
+\begin{itemize}
+    \item Logging in and signing up
+    \item Searching
+    \item Listing
+    \item Playing
+    \item Playlist
+\end{itemize}
+All of these functions will be described in more detail.
+
+\subsubsection{Terminology}
+To understand the user manual, some basic terminology will be provided.
+\begin{itemize}
+    \item \textbf{piece}: a particular piece of music in abstract, e.g. \emph{Bolero} by Maurice Ravel.
+    \item \textbf{content group}: a collection of multiple pieces belonging together, e.g. \emph{Symphony 5} by Ludwig van Beethoven, which consists of four different movements/pieces.
+    \item \textbf{composer}: the person who has written a particular piece or content group, e.g. \emph{Maurice Ravel} or \emph{Ludwig van Beethoven} from the examples above.
+    \item \textbf{performance}: a specific performance of a piece or content group, i.e. when a piece of music is played. E.g. Bolero by Maurice Ravel was performed by London Symphony Orchestra and Arpad Joo in a recording from 1995.
+    \item \textbf{performer}: a person or group who has taken part in a performance of a piece. E.g. \emph{London Symphony Orchestra} and \emph{Arpad Joo} was the performers in the example above. Performers can be further divided into different categories based on their role in the performance.
+    \item \textbf{group}: a type of performer consisting of an orchestra, band, or chamber music group, e.g. \emph{London Symphony Orchestra} from the example above.
+    \item \textbf{conductor}: a type of performer that is conducting/leading an orchestra or band and are responsible for the musical interpretation, among other things. E.g. \emph{Arpad Joo} in the example above.
+    \item \textbf{soloist}: a type of performer that performs a soloistic part, either completely alone or together with a group and/or conductor. E.g. Piano Concerto in A Minor by Edvard Grieg, performed by \emph{Javier Perianes}, BBC Symphonic Orchestra and Sakari Oramo. In this example, Javier Perianes is the soloist, BBC Symphonic Orchestra is a group, and Sakari Oramo is the conductor.
+\end{itemize}
+
+\subsubsection{Logging in and signing up}
+When Bithoven is started, the user will be asked to log in.
+This is done by entering an email address and a password.
+If a new email is entered, a new user account will be created and the user are asked to enter a password.
+
+\subsubsection{Searching}
+A common use case in Bithoven is to perform searches.
+A search starts with the keyword \texttt{search}, followed by a search category, and finally a search query.
+The search results will be listed together with a database id in square brackets, e.g. \texttt{[135]}.
+This id can be used for other functions in the program, such as listing, playing, and adding to a playlist.
+For some search categories, additional filtering can be done through the keyword \texttt{AND} and an additional query.
+Which search categories support this and what the additional filter is, is explained in more detail below.
+
+There are seven different search categories in Bithoven:
+\begin{itemize}
+    \item \texttt{composer}
+    \item \texttt{content-group}
+    \item \texttt{piece}
+    \item \texttt{performance}
+    \item \texttt{performer}
+    \item \texttt{album}
+    \item \texttt{all}
+\end{itemize}
+
+\paragraph{composer}
+The composer search category will list all composers in the database whose name contains the provided search query.
+In addition to the composer's name, the id of the composer will also be provided.
+
+\paragraph{content-group}
+The content group search category will list all content groups whose name contains the provided search query.
+All of the pieces in the content group will also be listed, as well as the composer of content group.
+The content group, the composer, and all of the pieces will be listed together with their database id.
+
+\paragraph{piece}
+The piece search category will list all pieces whose name -- or eventual content group's name -- contains the provided search query.
+If a piece is part of a content group, the name of the content group will be listed before the name of the piece.
+Additional filtering can be done by using the \texttt{AND} keyword in the search query.
+The subquery after this keyword will be used to filter all pieces whose composer's name contains the provided search query.
+For example, the command \texttt{search piece Symphony no. 5 AND Beethoven} will list all of the pieces
+where the name of the piece, or its content group, contains "Symphony no. 5" and it's composer's name
+contains "Beethoven".
+The database id of the piece and composer will also be provided.
+
+\paragraph{performance}
+The performance search category will list all performances of a piece whose name -- or eventual content group's name -- contains the provided search query.
+If a piece is part of a content group, the name of the content group will also be listed before the name of the piece.
+The composer of the piece or content group will be listed for each performance.
+Additional filtering can be done by using the \texttt{AND} keyword in the search query.
+The query after this keyword will be used to filter all performances of a piece whose composer's name contains the provided search query.
+A list of all performers, as well as their performer type (group/conductor/soloist) will be listed as well.
+The database id of the performance, the piece, the composer, and all of the performers will also be provided.
+
+\paragraph{performer}
+The performer category will list all performers whose name contains the provided search query.
+Note that the performer type will not be listed since this is specific to each performance.
+The database id of the performer will also be provided.
+
+\paragraph{album}
+The album category will list all albums whose name contains the provided search query.
+The database id of the album will also be provided.
+
+\paragraph{all}
+The all search category will perform searches of all the different search categories according to
+the rules above and will list the results grouped by search category.
+
+\subsubsection{Listing}
+Listing can be used to list everything related to a certain entity.
+The information displayed is different depending on the type of the entity.
+A listing query begins with the keyword \texttt{list}, and is followed by a database id.
+Information can be listed for each of the following types:
+\begin{itemize}
+    \item composer
+    \item content-group
+    \item piece
+    \item performer
+    \item performance
+    \item album
+\end{itemize}
+
+The type is determined automatically based on the provided id.
+If an id of a performer type is provided, this can be further specified by providing one of the
+following keywords after the id:
+
+\begin{itemize}
+    \item group
+    \item conductor
+    \item soloist
+\end{itemize}
+If the provided id is not of a performer type, anything entered after the id will be ignored.
+
+An example of a list command is \texttt{list 62} or \texttt{list 65 conductor}.
+
+\paragraph{composer}
+Listing a composer will display all of the content groups and pieces written by the composer.
+The pieces are listed first, followed by each content group, with it's pieces listed indented below it.
+The pieces are ordered in alphabetical order based on the name, followed by the content groups, also ordered in alphabetical order.
+Each piece in a content group will be ordered by it's internal ordering.
+The database id of each content group and piece will also be provided.
+
+\paragraph{content-group}
+Listing a content-group will display it's composer and all pieces it consists of.
+It will also list all performances of the content-group or any of it's pieces.
+Each performance will display all performer's name as well as their performance type.
+The database id of each performance, performer, piece, and composer will also be provided.
+
+\paragraph{piece}
+Listing a piece will display it's composer and it's eventual content group.
+It will also list all performances of the piece together with the performance's performers.
+The performances will be ordered by it's recording date.
+The database id of each performance, performer, and composer will also be provided.
+
+\paragraph{performer}
+Listing a performer will display all of the performances the performer has performed on.
+The performances will be listed together with it's piece, and composer.
+The database id of each performance, piece, and composer will also be provided.
+
+\paragraph{group}
+Listing a group will provide the same information as \texttt{performer}, but only where the
+specified performer has performed as a group, i.e. not as a soloist or conductor.
+
+\paragraph{conductor}
+Listing a conductor will provide the same information as \texttt{performer}, but only where the
+specified performer has performed as a group, i.e. not as a soloist or group.
+
+\paragraph{soloist}
+Listing a soloist will provide the same information as \texttt{performer}, but only where the
+specified performer has performed as a group, i.e. not as a group or conductor.
+
+\paragraph{performance}
+Listing a performance will display it's composer, piece and eventual content group, as well as all
+of it's performers, consisting of their name and performer type.
+The database id of the composer, piece, and all performers will also be provided.
+
+\paragraph{album}
+Listing an album will display all the performances on it, which consists of it's composer, piece,
+eventual content group, and every performer.
+The database id of each performance, composer, piece, and performer will also be listed.
+
+\subsubsection{Playing}
+Playing are not supported inside the terminal based UI, but will instead open a URL in the default
+browser. All performances will have a URL to a recording available on Spotify, so a Spotify account
+is required to use this feature.
+
+The play function is invoked by the keyword \texttt{play} followed by an id to a performance.
+Other types are not supported in this application.
+% Could open an album aswell. Maybe a playlist, but the user have to start every new performance?
+
+\subsubsection{Playlists}
+Playlists are associated with the user that is currently logged in.
+A playlist can hold a list of performances that the user wants to group together.
+All actions on playlists starts with the keyword \texttt{playlist} and is followed by one of the
+following keywords:
+\begin{itemize}
+    \item \texttt{list}
+    \item \texttt{create}
+    \item \texttt{delete}
+    \item \texttt{rename}
+    \item \texttt{add}
+    \item \texttt{remove}
+\end{itemize} 
+
+\paragraph{list}
+Listing can be done in two ways. Either a user can display all of it's playlists by just entering
+\texttt{playlist list}. Or a user can display the content of a particular playlist by also entering
+the playlist id, e.g. \texttt{playlist list 53}. A playlist can only be listed if it is owned by the
+user currently logged in.
+
+Playlists will be listed with their name, number of performances added to them, and their database
+id.
+The performances in a specific playlist will be listed with their piece name, eventual content group
+name, composer, performers as well as the database id for each entity, including the performance.
+
+\paragraph{create}
+A user can create a new empty playlist with the keyword \texttt{create}. This must be followed by
+the name of the playlist, e.g. \texttt{playlist create Barock'n'Roll}. The name can be of arbitrary
+length and consist of multiple words, but should only contain ascii characters. A user can have
+several playlists with the same name.
+
+\paragraph{delete}
+A user can delete a playlist it owns with the keyword \texttt{delete}, followed by the id of the
+playlist, e.g. \texttt{playlist delete 53}.
+% Warning if not empty?
+
+\paragraph{rename}
+A user can rename any of it's playlists with the keyword \texttt{rename}. This must be followed by
+the id of the playlist to rename as well as the new name. E.g. \texttt{playlist rename 53 Playliszt}
+
+\paragraph{add}
+A user can add a performance to any of it's playlists with the keyword \texttt{add}, followed by the
+id of the playlist to add to and the id of the performance to add, e.g. \texttt{playlist add 35 53}.
+The performance will be added last in the playlist. The same performance can be added multiple times
+to the same playlist.
+
+\paragraph{remove}
+A user can remove a performance from any of it's playlists with the keyword \texttt{remove}, followed
+by the id of the playlist to remove from and the id of the performance to remove, e.g.
+\texttt{playlist remove 35 53}. If the same performance is added multiple times to a playlist, the
+user will be asked which performance to remove.
+
+\subsubsection{Help}
+Help can be provided in the application by entering the keyword \texttt{help}.
+
+\subsubsection{Quitting}
+The application is quit by first logging out, using any of the keywords: \texttt{logout}, \texttt{quit},
+or \texttt{exit}. During the log out screen, an \texttt{EOF} character can be entered to exit the
+application. This is \texttt{\^D} in a Unix based system or \texttt{\^Z} on a Windows system.
+
