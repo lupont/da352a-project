@@ -1,0 +1,79 @@
+\subsubsection{Development Process}
+Bithoven is developed in Java with Neo4j using the official Neo4j driver. The
+driver is managed through Maven, and is the only external dependency of the
+project. To make the development process simpler, we used GNU Make to wrap the
+most common Maven commands. We used Git in for version control.
+
+\subsubsection{Neo4j}
+As described, we chose to use Neo4j as a database for Bithoven. Neo4j is itself
+written in Java, and is cross-platform. We found that the simplest way of
+installing Neo4j was via Docker, since Neo4j provides an official container.
+A thorough guide of how to get Neo4j set up through Docker is provided in
+section \ref{inst-instr-inst}.
+
+\subsubsection{Installation}
+\label{inst-instr-inst}
+In order to install Bithoven, you need the following software installed on your
+computer:
+\begin{enumerate}
+    \item Java
+    \item Docker
+\end{enumerate}
+
+The main part of installing Bithoven is getting the Neo4j database set up. After
+that, it is simply a question of running the provided jar file. The following
+will describe how to do this.
+
+\begin{enumerate}
+    \item Copy the provided \texttt{neo4j} directory to your home directory.
+
+    \item Install and launch the official Neo4j Docker Image:
+\begin{verbatim}
+docker run \
+ --name testneo4j \
+ -p7474:7474 -p7687:7687 \
+ -d \
+ -v $HOME/neo4j/data:/data \
+ -v $HOME/neo4j/logs:/logs \
+ -v $HOME/neo4j/import:/var/lib/neo4j/import \
+ -v $HOME/neo4j/plugins:/plugins \
+ --env NEO4J_AUTH=neo4j/test \
+ neo4j:latest
+\end{verbatim}
+This command gets the latest version of Neo4j from Dockerhub, maps the needed
+ports from your host machine to the container, and likewise maps the folder called
+\texttt{neo4j} in your home directory to important parts of the container. The
+reason for manually adding the directory is that the provided one contains
+pre-made data that is needed in order to be able to explore the application.
+NOTE:
+Bithoven expects the bolt port to be 7687, so do not change this to any other
+port.
+
+    \item In a web browser, navigate to \texttt{https://localhost:7474} to check
+        that the installation worked. If you are greeted by the Neo4j web
+        dashboard, everything is fine -- in which case you can sign in with
+        username \emph{neo4j} and password \emph{test}.
+
+    \item Run the following command in the directory of the
+        \texttt{bithoven.jar} file:
+\begin{verbatim}
+java -cp bithoven.jar bithoven.App
+\end{verbatim}
+
+    \item You should now be greeted by a login page. Enter an e-mail address and
+        a password to create a new user.
+\end{enumerate}
+
+Once you have created a user, the application will suggest you to use the
+\texttt{help} command to see what actions can be performed. Use this help to
+explore the application fully.
+
+\subsubsection{Links}
+\label{installation-instructions-links}
+\begin{enumerate}
+    \item \href{https://neo4j.com/developer/java/}{Neo4j Official Java Driver}
+    \item \href{https://maven.apache.org/download.cgi}{Maven}
+    \item \href{https://gnu.org/software/make/}{GNU Make}
+    \item \href{https://git-scm.com/}{Git}
+    \item \href{https://docker.com}{Docker}
+\end{enumerate}
