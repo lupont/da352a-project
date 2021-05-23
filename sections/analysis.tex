@@ -16,7 +16,7 @@ connecting two items meant two queries.
 The main advantage of using a key-value database for Bithoven is that the
 project is quite read-heavy. The only times writes are performed is when a user
 creates/deletes/modifier a playlist, and when new data is added by the
-administrators. The absoulte majority of the time, users would only perform read
+administrators. The absolute majority of the time, users would only perform read
 operations -- which key-value databases can be quite performant with. However,
 as we will soon discuss, this alone does not mean that it is a viable option for
 our project.
@@ -33,15 +33,33 @@ the data we want.
 \label{analysis-doc-db}
 
 It can be quite natural to think of Bithoven in terms of documents, which is the
-case for many database applications -- and why document databases are so
-tempting. We have a lot of models, many of them in some way connected with one
-another, and being able to fetch a document of this could be very nice. However,
-there would be a \emph{lot} of wasted space if each document should hold its
-relationships entirely. On the other hand, if the documents contained references
-to its related documents, multiple queries for---potentially---large documents
-would be needed to get the data the application requires. This all boils down to
-the fact that a document-based database is not the best of fit for Bithoven, and
-thus the quest for the perfect NoSQL database type continues.
+case for many database applications -- and one of the reasons why document
+databases are so tempting. We have a lot of models, many of them in some way
+connected with one another, and being able to fetch a document of this could be
+very nice. However, there would be a \emph{lot} of wasted space if each document
+should hold its relationships entirely. On the other hand, if the documents
+contained references to its related documents, multiple queries
+for---potentially---large documents would be needed to get the data the
+application requires. 
+
+Much of Bithoven's data storage has more to do with relationships than
+properties. For instance, a \emph{playlist} in Bithoven is by itself nothing
+more than a title. All the useful data -- i.e. who owns it, what performances it
+contains -- is neither a property of the playlist nor the performance. Thus,
+playlist documents would only contain a single property. Document databases are
+less than ideal for relationship-heavy datasets, which makes it difficult
+finding any real advantages of them for our use case.
+
+Bithoven is a read-heavy application indeed, as briefly discussed in section
+\ref{analysis-kv-db}. Scaling a document database for reading is often as simple
+as adding more read slaves to the replica set. This is quite attractive for
+Bithoven. However, it is questionable if it is enough of an attraction to make
+document databases worth it. We still have the previously described issues to
+worry about, and many other NoSQL databases scale easily enough for reads as
+well.
+
+This all leads to the fact that document databases is not the best of fit for
+Bithoven, and thus the quest for the perfect NoSQL database type continues.
 
 \subsection{Graph Databases}
 \label{analysis-graph-db}
