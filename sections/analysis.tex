@@ -111,3 +111,73 @@ A downside with using a Column Database is that the columns for a row is often s
 
 % Our project - Pros
 A benefit with with using a Column Database for our project is the ease of scaling it. New nodes can easily be added to the database cluster to extend the storage capabilities, as well as availability. Since this project does not require many frequent changes to the database, it can be configured to have very fast read performance and consistent write performance.
+
+\subsection{Our choice}
+We have decided to use a Graph Database for our application. There are multiple reasons for this
+choice and we will describe each in more detail. To better understand the reasons, we have
+included a Graph Database data model to show how the data is related.
+
+\includegraphics[scale=0.35]{graph-dm.png}
+
+% No good main aggregate
+There are no obvious main aggregate for our application. Some of the main functions of the
+application is to view the data in a number of different views. A Graph Database does not have good
+capabilities to store aggregate data, but can calculate an aggregate very fast. For example, one of
+the functions in the application is to list all performances of a certain piece. This could be
+modelled as an aggregate in all other types of NoSQL databases, but would have to be recalculated
+for every query in a Graph Database, as well as a relational database. However, some other features
+are to list all performances on a certain album, all performances by a certain performer, or all
+performances on a certain playlist. This would require either redundant aggregates in other NoSQL
+databases, or using foreign keys and create the new aggregates with application logic. Because there
+are so many different aggregates with redundant data, we think that the capability to recreate the
+aggregates from atomic parts in an effective way is preferable than having a few aggregates be fast
+and others be slow.
+
+% Main use cases are relationship oriented
+The data for our application is naturally relationship-oriented and the relationships themselves are
+just as important as the data. For example, a Composer have written Pieces, which are performed in
+Performances by Performers. The data about a Piece is just as important as who wrote the piece and
+which performances there are of it. This type of relationship based data fits very comfortably into
+a Graph Database model. As can be seen in the attached data model, the data can easily be described
+through nodes and relationships, even though the data have a semi-complicated structure. The other
+NoSQL database types are more suited for aggregate or hierarchical data with a specific entry point.
+For our data, almost every node can be -- and will be -- used as an entry point to find related
+data. Because of this, relationships are a perfomant way to create the information needed about a
+certain node. For example, a user might want to list all performances of a certain Performer. The
+specific performer node can be used as an entry point in the database, and relevant data can be
+traversed through the graph. The Performer node has relationships to all Performances, which have
+relationships to which Piece it is a Performance of. The Piece could in turn be part of a
+ContentGroup, and finally be written by a Composer. In another example, a Playlist or Album can be
+used as the entry point, and provide just as performant graph traversal.
+
+% Most of the data will be read-only, meaning scaling can be done in a controlled way
+One of the big downsides of a Graph Database compared to other NoSQL databases is that it does not
+scale as well. This is a downside for our application as well. However, since most of the data is
+read-only the scaling can be performed in a controlled way. Read-access scaling is well supported
+in Graph Databases which would be the biggest bottleneck of our application. The majority of the
+data is not added or modified by the users, but rather through administrators.
+Because of this, data can be added in a controlled way where the database can be migrated to
+bigger hardware for vertical scaling when needed.
+
+% Writable user data can be isolated and sharded
+The data that is updated by the users -- playlists and user accounts -- will grow in an uncontrolled
+way. To be able to cope with this, this data can eventually be broken out on a separate Graph
+Database shard, or on another type of NoSQL database. The user data has a model more suited for the
+other NoSQL types compared to the read-only data. It can use an aggregate with the user email as its
+key, and user information and playlists as its value/document/columns.  Each playlist needs to hold
+the key of each of its added performances to be able to access them. This is slower than a direct
+relationship in a Graph Database, but key index lookups are still a fast way to retrieve data, and
+the only way in most other NoSQL databases. The keys give many different entry points in the
+database which each requires a key index lookup, but the performance lost is probably worth the
+added scalability. However, for the scope of this project, the user data are also modelled in the
+main graph database.
+
+% Because of atomic parts, the query language can easily be used to create more advanced aggregates without changing the data in any way
+In our application we want the user to be able to search for and list data in many different ways.
+There could be many different criteria that the user might want to filter the data by. For example
+to list all performances of any piece by a certain composer with their a specific orchestra and
+conductor. This is not possible in our application right now, but can easily be added in a Graph
+Database without changing the data. This is possible because Graph Databases uses atomic data
+without aggregates and a query language to access the data. To support the scenario described above
+only a new query would need to be created and incorporated into the application. This is very
+beneficial to secure that our application is easy to continue to develop and add new features to.
