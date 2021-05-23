@@ -1,1 +1,38 @@
-% 1 page
+Bithoven is an application for the classical music enthusiast, who has been
+irritated by the lack of information about the pieces they listen to. Mainstream
+music services focus more on popular music, often only consisting of an artist,
+a title, and an album. When listening to classical music, you often want to know
+who the composer is, who wrote the piece in the first place, eventual soloists,
+and more. Bithoven allows for easily finding all of this, through a simple
+command-line interface. It is a user-based service, requiring signing in with an
+email account. This is because Bithoven supports playlists. Any user can create
+as many playlists as they want, consisting of any performances they want. The
+user can search for specific albums, composers, content groups, pieces,
+performers, and performances, and instantly get access to the information they
+want. After finding a performance of interest, the user can choose to play it.
+This works by opening a web browser to the performance's internal URL.
+
+NoSQL has, in recent years, become quite attractive for developing applications.
+The different kinds of NoSQL databases allow for many different use cases;
+simple but powerful query languages, ease of use, good interaction with web
+technologies, and of course, the ability to handle big data. Choosing to use
+NoSQL therefore leads to another important question: what type should one use?
+In some cases, the choice is clear, while in others, it might be more difficult.
+
+In our case, the choice was quite clear from the start. Bithoven is an
+application that relies heavily on the relationships between data, and the type
+of NoSQL database that handles this the best is graph databases. Therefore, we
+used Neo4j to develop our database. Its natural query language \emph{Cypher}
+is intuitive and powerful, and while using it during development it became clear
+that we made the right choice.
+
+It can be argued that graph databases handle scaling the worst of the types of
+NoSQL databases. We realized this from the start, but came to the conclusion
+that while it might evolve into a problem in the future, they still fit the best
+for our use case. Since Bithoven is read-bound, scaling it is not as big of a
+problem as it would have been had the application been more write-bound.
+
+Other types of NoSQL databases include Key-Value, Document, and Column-Based.
+These all have their use cases, and we have discussed advantages and
+disadvantages of all of them -- in general as well as specifically regarding
+Bithoven.
